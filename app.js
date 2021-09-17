@@ -5,7 +5,7 @@ const fs = require('fs');
 const HttpError = require('./models/http-error');
 const productsRoutes = require('./routes/products-routes');
 const usersRoutes = require('./routes/users-routes');
-const categoryRoutes = require('./routes/category-routes');
+const categoryRoutes = require('./routes/categories-routes');
 
 const app = express();
 
