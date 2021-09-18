@@ -54,7 +54,7 @@ app.use((error, req, res, next) => {
 //connection to the database
 mongoose
     .connect(
-        `mongodb+srv://Ayoub-Jouini:FirstDataBase@cluster0.sz0b5.mongodb.net/project-1-database?retryWrites=true&w=majority`
+        `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.sz0b5.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
     )
     .then(() => {
         app.listen(5000);
