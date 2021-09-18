@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const HttpError = require('./models/http-error');
+const HttpError = require('./middleware/http-error');
 const productsRoutes = require('./routes/products-routes');
 const usersRoutes = require('./routes/users-routes');
 const categoryRoutes = require('./routes/categories-routes');
@@ -31,7 +31,7 @@ app.use('/api/products', productsRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/users', usersRoutes);
 
-//page not found error
+//page not found error 404
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);
     throw error;
@@ -58,6 +58,7 @@ mongoose
     )
     .then(() => {
         app.listen(5000);
+        console.log('listen:5000');
     })
     .catch(err => {
         console.log(err);
