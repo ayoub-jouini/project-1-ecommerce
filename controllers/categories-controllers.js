@@ -99,7 +99,7 @@ const postCategory = async (req, res, next) => {
         createdCategory.save();
     } catch (err) {
         const error = new HttpError(
-            'Something went wrong, could nor save category.',
+            'Something went wrong, could not save category.',
             500
         );
         return next(error);
@@ -108,8 +108,33 @@ const postCategory = async (req, res, next) => {
     res.status(202).json({ message: 'category is saved', category: createdCategory });
 }
 
-const updateCategory = () => {
 
+//update category
+const updateCategory = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next(
+            new HttpError(
+                'invalid inputs passed, please check your data',
+                422
+            )
+        );
+    }
+
+    const categoryId = req.param.id;
+    const { categoryName } = req.body;
+
+    try {
+        await Category.findByIdAndUpdate(categoryId, { categoryName });
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not update category.',
+            500
+        );
+        return next(error);
+    }
+
+    res.status(202).json({ message: 'category updated' });
 }
 
 const deleteCategory = () => {
