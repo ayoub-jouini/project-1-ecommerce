@@ -23,7 +23,7 @@ const getAllProducts = async (req, res, next) => {
 
     if (products.length === 0) {
         const error = new HttpError(
-            'their is no products',
+            'there is no products',
             404
         );
         return next(error);
