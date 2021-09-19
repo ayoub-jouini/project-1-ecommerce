@@ -56,8 +56,56 @@ const getCategoryById = async (req, res, next) => {
     res.json({ category: fCategory.toObject({ getters: true }) })
 }
 
-const postCategory = () => {
 
+//create a category
+const postCategory = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError('Invalid inputs passed, please check your data.', 422)
+        );
+    }
+
+    const { categoryName } = req.body;
+    const creator; //need the token to get the creator;
+
+    let validCategory;
+    try {
+        validCategory = Category.findOne({ categoryName });
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not valid the category.',
+            500
+        );
+        return next(error);
+    }
+
+    if (!(validCategory.length === 0)) {
+        const error = new HttpError(
+            'category already exist.',
+            404
+        );
+        return next(error);
+    }
+
+    //user validation !!!!
+
+    //create category
+    const createdCategory = new Category({
+        categoryName,
+        creator
+    });
+    try {
+        createdCategory.save();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could nor save category.',
+            500
+        );
+        return next(error);
+    }
+
+    res.status(202).json({ message: 'category is saved', category: createdCategory });
 }
 
 const updateCategory = () => {
