@@ -59,6 +59,13 @@ const getCategoryById = async (req, res, next) => {
 
 //create a category
 const postCategory = async (req, res, next) => {
+
+
+    //token 
+    //image upload
+    //user validation
+
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(
@@ -88,8 +95,6 @@ const postCategory = async (req, res, next) => {
         return next(error);
     }
 
-    //user validation !!!!
-
     //create category
     const createdCategory = new Category({
         categoryName,
@@ -111,6 +116,13 @@ const postCategory = async (req, res, next) => {
 
 //update category
 const updateCategory = async (req, res, next) => {
+
+
+    //token 
+    //image update
+    //user validation
+
+
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         return next(
@@ -137,7 +149,26 @@ const updateCategory = async (req, res, next) => {
     res.status(202).json({ message: 'category updated' });
 }
 
-const deleteCategory = () => {
+
+//delete category function
+const deleteCategory = async (req, res, next) => {
+
+    //token  
+    //image delete
+    //user validation 
+
+    const categoryId = req.params.id;
+    try {
+        await Category.findByIdAndDelete(categoryId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not delete category',
+            500
+        );
+        return next(error);
+    }
+
+    res.json({ message: 'category deleted' });
 
 }
 
