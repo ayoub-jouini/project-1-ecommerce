@@ -138,7 +138,6 @@ const postProduct = async (req, res, next) => {
     // the requeste body
     const { productName,
         productCategory,
-        image,
         description,
         price,
         onStock,
@@ -191,7 +190,7 @@ const postProduct = async (req, res, next) => {
     const createdProduct = new Product({
         productName,
         productCategory,
-        image /*req.file.path */,
+        image: req.file.path,
         description,
         price,
         onStock,
@@ -235,7 +234,6 @@ const updateProduct = async (req, res, next) => {
     }
 
     const { productName,
-        image,
         description,
         price,
         onStock,
@@ -244,9 +242,8 @@ const updateProduct = async (req, res, next) => {
     } = req.body;
     const productId = req.params.id;
 
-    let updatedProduct;
     try {
-        updatedProduct = await Product.findByIdAndUpdate(productId, {
+        await Product.findByIdAndUpdate(productId, {
             productName, image/* uploade image */, description, price, onStock,
             size, bestDesplay
         })

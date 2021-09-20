@@ -1,6 +1,7 @@
 const express = require('express');
 
 const productsControllers = require('../controllers/products-controllers');
+const fileUpload = require('../middleware/file-upload');
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.get('/:category', productsControllers.getProductsByCategory);
 
 router.get('/:category/:id', productsControllers.getProductById);
 
-router.post('/', productsControllers.postProduct);
+router.post('/', fileUpload.single('image'), productsControllers.postProduct);
 
 router.patch('/:category/:id', productsControllers.updateProduct);
 
