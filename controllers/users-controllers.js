@@ -10,10 +10,18 @@ const getAllUsers = async (req, res, next) => {
     let users;
     try {
         users = await User.find({});
-    } catch {
+    } catch (err) {
         const error = new HttpError(
             'Something went wrong, could not find users.',
             500
+        );
+        return next(error);
+    }
+
+    if (users.length === 0) {
+        const error = new HttpError(
+            'there is no users',
+            404
         );
         return next(error);
     }
@@ -22,7 +30,7 @@ const getAllUsers = async (req, res, next) => {
 
 }
 
-const getUserById = () => {
+const getUserById = async (req, res, next) => {
 
 }
 
