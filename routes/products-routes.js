@@ -15,7 +15,7 @@ router.get('/:category/:id', productsControllers.getProductById);
 
 router.post('/', fileUpload.single('image'), productsControllers.postProduct);
 
-router.patch('/:category/:id', productsControllers.updateProduct);
+router.patch('/:category/:id', fileUpload.single('image'), productsControllers.updateProduct);
 
 router.delete('/:category/:id', productsControllers.deleteProduct);
 
