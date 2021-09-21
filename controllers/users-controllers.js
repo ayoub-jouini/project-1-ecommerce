@@ -32,6 +32,27 @@ const getAllUsers = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
 
+    const userId = req.params.id;
+    let user;
+    try {
+        user = await User.findById(userId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find user',
+            500
+        );
+        return next(error);
+    }
+
+    if (!user) {
+        const error = new HttpError(
+            'there is no user.',
+            404
+        );
+        return next(error);
+    }
+
+    res.json({ user: user.toObject({ getters: true }) })
 }
 
 const postUser = () => {
