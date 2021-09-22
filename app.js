@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const fs = require('fs');
+const path = require('path');
 
 const HttpError = require('./middleware/http-error');
 const productsRoutes = require('./routes/products-routes');
@@ -14,6 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+
+//images access
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
 //Access-Control
 app.use((req, res, next) => {
