@@ -7,9 +7,11 @@ const router = express.Router();
 
 router.get('/', usersControllers.getAllUsers);
 
-router.get('/:id', usersControllers.getUserById);
+router.post('/singin', usersControllers.signIn);
 
-router.post('/', usersControllers.postUser);
+router.post('/singup', usersControllers.signUp);
+
+router.get('/:id', usersControllers.getUserById);
 
 router.patch('/:id', usersControllers.updateUser);
 
