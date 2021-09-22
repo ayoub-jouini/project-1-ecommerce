@@ -264,13 +264,23 @@ const deleteProduct = async (req, res, next) => {
     const productId = req.params.id;
 
     //token 
-    //image delete 
     //user validtion
 
-
-    let deletedProduct;
+    let product;
     try {
-        deletedProduct = await Product.findByIdAndDelete(productId);
+        product = await Product.findById(productId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find the product.',
+            500
+        );
+        return next(error);
+    }
+
+    const imagePath = product.image;
+
+    try {
+        await product.remove();
     } catch (err) {
         const error = new HttpError(
             'Something went wrong, could not delete product.',
@@ -278,6 +288,10 @@ const deleteProduct = async (req, res, next) => {
         );
         return next(error);
     }
+
+    fs.unlink(imagePath, err => {
+        console.log(err);
+    })
 
     res.status(200).json({ message: "deleted product" });
 }
