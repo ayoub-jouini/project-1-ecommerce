@@ -242,18 +242,41 @@ const updateProduct = async (req, res, next) => {
     } = req.body;
     const productId = req.params.id;
 
+    let product;
     try {
-        await Product.findByIdAndUpdate(productId, {
-            productName, image/* uploade image */, description, price, onStock,
-            size, bestDesplay
-        })
+        product = await Product.findById(productId);
     } catch (err) {
         const error = new HttpError(
-            'Something went wrong, could not update the product.',
+            'Something went wrong, could not find the product.',
             500
         );
         return next(error);
     }
+
+    const imagePath = product.image;
+    product.productName = productName;
+    product.description = description;
+    product.price = price;
+    product.onStock = onStock;
+    product.size = size;
+    product.bestDesplay = bestDesplay;
+    product.image = req.file.path;
+
+    try {
+        await product.save();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not update product.',
+            500
+        );
+        return next(error);
+    }
+    if (imagePath != req.file.path) {
+        fs.unlink(imagePath, err => {
+            console.log(err);
+        })
+    }
+
 
     res.status(200).json({ message: "product updated" });
 }
