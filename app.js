@@ -7,6 +7,7 @@ const HttpError = require('./middleware/http-error');
 const productsRoutes = require('./routes/products-routes');
 const usersRoutes = require('./routes/users-routes');
 const categoryRoutes = require('./routes/categories-routes');
+const orderRouter = require('./routes/order-routes');
 
 const app = express();
 
@@ -31,9 +32,12 @@ app.use((req, res, next) => {
     next();
 });
 
+
+//routes
 app.use('/api/products', productsRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/orders', orderRouter);
 
 //page not found error 404
 app.use((req, res, next) => {
