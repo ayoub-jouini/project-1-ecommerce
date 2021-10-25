@@ -4,10 +4,9 @@ const jwt = require('jsonwebtoken');
 
 const HttpError = require('../middleware/http-error');
 const User = require('../models/users-model');
+const checkUserRole = require('../middleware/check-user-Role');
 
 const getAllUsers = async (req, res, next) => {
-
-    //token
 
     let users;
     try {
@@ -33,8 +32,6 @@ const getAllUsers = async (req, res, next) => {
 }
 
 const getUserById = async (req, res, next) => {
-
-    //token 
 
     const userId = req.params.id;
     let user;
@@ -62,9 +59,6 @@ const getUserById = async (req, res, next) => {
 
 //signUp function
 const signUp = async (req, res, next) => {
-
-    //admin validation
-
 
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -200,6 +194,79 @@ const signIn = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 
+    //admin validation
+    let adminValidation;
+    try {
+        adminValidation = checkUserRole("admin", req.userData.userId);
+    } catch (err) {
+        const error = new HttpError(
+            'something went wrong.',
+            500
+        );
+        return next(error);
+    }
+    if (!adminValidation) {
+        const error = new HttpError(
+            'Access denied.',
+            500
+        );
+        return next(error);
+    }
+
+
+    //data validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(
+            new HttpError('Invalid inputs passed, please check your data.', 422)
+        );
+    }
+
+    const {
+        firstName,
+        lastName,
+        email,
+        password,
+        userType
+    } = req.body;
+
+    const userId = req.params.id;
+
+    let user;
+    try {
+        user = await User.findById(userId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find the user.',
+            500
+        );
+        return next(error);
+    }
+
+    const imagePath = user.image;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.password = password;
+    user.userType = userType;
+
+    //save change 
+    try {
+        await user.save();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not update user.',
+            500
+        );
+        return next(error);
+    }
+    if (imagePath != req.file.path) {
+        fs.unlink(imagePath, err => {
+            console.log(err);
+        })
+    }
+
+    res.status(200).json({ message: "user updated" });
 }
 
 const deleteUser = () => {
