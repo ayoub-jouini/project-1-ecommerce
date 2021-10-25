@@ -8,7 +8,7 @@ const productSchema = new Schema({
     image: { type: String, require: true },
     description: { type: String, require: true },
     price: { type: Number, require: true },
-    onStock: { type: Boolean, require: true },
+    onStock: { type: Boolean, require: true, default: true },
     size: { type: Array, require: true },
     bestDesplay: { type: Boolean, require: true },
     creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
