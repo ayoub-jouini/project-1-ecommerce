@@ -4,7 +4,6 @@ const { check } = require('express-validator');
 const usersControllers = require('../controllers/users-controllers');
 const fileUpload = require('../middleware/file-upload');
 const checkAuth = require('../middleware/check-auth');
-const checkAdmin = require('../middleware/check-admin');
 
 const router = express.Router();
 
@@ -15,9 +14,6 @@ router.post('/singin',
 );
 
 router.use(checkAuth);
-
-//check if the user is an admin : in progress(not done yet)
-router.use(checkAdmin);
 
 router.get('/', usersControllers.getAllUsers);
 
