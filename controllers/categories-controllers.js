@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 
 const HttpError = require('../middleware/http-error');
@@ -60,12 +59,6 @@ const getCategoryById = async (req, res, next) => {
 //create a category
 const postCategory = async (req, res, next) => {
 
-
-    //token 
-    //image upload
-    //user validation
-
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(
@@ -74,11 +67,11 @@ const postCategory = async (req, res, next) => {
     }
 
     const { categoryName } = req.body;
-    const creator; //need the token to get the creator;
+    const creator = req.userData.userId;
 
     let validCategory;
     try {
-        validCategory = Category.findOne({ categoryName });
+        validCategory = await Category.findOne({ categoryName });
     } catch (err) {
         const error = new HttpError(
             'Something went wrong, could not valid the category.',
@@ -101,7 +94,7 @@ const postCategory = async (req, res, next) => {
         creator
     });
     try {
-        createdCategory.save();
+        await createdCategory.save();
     } catch (err) {
         const error = new HttpError(
             'Something went wrong, could not save category.',
@@ -116,12 +109,6 @@ const postCategory = async (req, res, next) => {
 
 //update category
 const updateCategory = async (req, res, next) => {
-
-
-    //token 
-    //image update
-    //user validation
-
 
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -153,9 +140,6 @@ const updateCategory = async (req, res, next) => {
 //delete category function
 const deleteCategory = async (req, res, next) => {
 
-    //token  
-    //image delete
-    //user validation 
 
     const categoryId = req.params.id;
     try {
@@ -167,6 +151,8 @@ const deleteCategory = async (req, res, next) => {
         );
         return next(error);
     }
+
+    //delete all the products with this category;
 
     res.json({ message: 'category deleted' });
 
