@@ -122,12 +122,6 @@ const getProductById = async (req, res, next) => {
 //create a product function
 const postProduct = async (req, res, next) => {
 
-
-    //token 
-    //image upload
-    //user validation
-
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(
@@ -219,13 +213,6 @@ const postProduct = async (req, res, next) => {
 //update product function
 const updateProduct = async (req, res, next) => {
 
-
-    //token 
-    //image update and the old one remove
-    //user validation
-
-
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(
@@ -284,10 +271,8 @@ const updateProduct = async (req, res, next) => {
 
 //delete product function 
 const deleteProduct = async (req, res, next) => {
-    const productId = req.params.id;
 
-    //token 
-    //user validtion
+    const productId = req.params.id;
 
     let product;
     try {
