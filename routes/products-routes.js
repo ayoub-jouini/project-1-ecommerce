@@ -1,4 +1,5 @@
 const express = require('express');
+const { check } = require('express-validator');
 
 const productsControllers = require('../controllers/products-controllers');
 const checkAuth = require('../middleware/check-auth');
@@ -16,9 +17,19 @@ router.get('/:category/:id', productsControllers.getProductById);
 
 router.use(checkAuth);
 
-router.post('/', fileUpload.single('image'), productsControllers.postProduct);
+router.post('/',
+    fileUpload.single('image'),
+    check('productName').not().isEmpty(),
+    check('productCategory').not().isEmpty(),
+    check('price').not().isEmpty(),
+    check('creator').not().isEmpty(),
+    productsControllers.postProduct);
 
-router.patch('/:category/:id', fileUpload.single('image'), productsControllers.updateProduct);
+router.patch('/:category/:id',
+    fileUpload.single('image'),
+    check('productName').not().isEmpty(),
+    check('price').not().isEmpty(),
+    productsControllers.updateProduct);
 
 router.delete('/:category/:id', productsControllers.deleteProduct);
 
