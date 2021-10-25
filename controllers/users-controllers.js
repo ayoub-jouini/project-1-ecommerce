@@ -59,7 +59,13 @@ const getUserById = async (req, res, next) => {
     res.json({ user: user.toObject({ getters: true }) })
 }
 
+
+//signUp function
 const signUp = async (req, res, next) => {
+
+    //admin validation
+
+
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         return next(
@@ -120,9 +126,12 @@ const signUp = async (req, res, next) => {
         return next(error);
     }
 
-    //the token...
+    res.status(201).json({ userId: createdUser.id, email: createdUser.email });
 }
 
+
+
+//signin function
 const signIn = async (req, res, next) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -174,10 +183,22 @@ const signIn = async (req, res, next) => {
         return next(error);
     }
 
-    //token...
+    //token
+    let token;
+    try {
+        token = jwt.sign({ userId: existingUser.id, email: existingUser.email }, "my-token-key");
+    } catch (err) {
+        const error = new HttpError(
+            'Signing up failed, please try again later.',
+            500
+        );
+        return next(error);
+    }
+
+    res.status(201).json({ userId: existingUser.id, email: existingUser.email, token: token });
 }
 
-const updateUser = () => {
+const updateUser = async (req, res, next) => {
 
 }
 
