@@ -119,8 +119,32 @@ const deleteOrder = (req, res, next) => {
 
 }
 
-const updateOrderState = (req, res, next) => {
+const updateOrderState = async (req, res, next) => {
+    const orderId = req.params.id;
+    const { orderState } = req.body;
+    let order;
+    try {
+        order = await Order.findById(orderId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find the order.',
+            500
+        );
+        return next(error);
+    }
+    order.orderState = orderState;
 
+    try {
+        await order.save();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not save the Order.',
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ message: "state updated" });
 }
 
 exports.postOrder = postOrder;
