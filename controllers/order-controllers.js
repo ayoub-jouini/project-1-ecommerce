@@ -93,8 +93,26 @@ const getAllOrders = async (req, res, next) => {
 
 }
 
-const getOrderById = (req, res, next) => {
+const getOrderById = async (req, res, next) => {
+    const orderId = req.params.id;
+    let order;
+    try {
+        order = await Order.findById(orderId);
+    } catch (err) {
+        const error = new HttpError('something went wrong, could not find the order',
+            500);
+        return next(error);
+    }
 
+    if (order.length == 0) {
+        const error = new HttpError(
+            'there is no order whith this id.',
+            500
+        );
+        return next(error);
+    }
+
+    res.json({ order: order.toObject({ getters: true }) });
 }
 
 const deleteOrder = (req, res, next) => {
