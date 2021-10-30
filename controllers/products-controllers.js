@@ -136,9 +136,10 @@ const postProduct = async (req, res, next) => {
         price,
         onStock,
         size,
-        bestDesplay,
-        creator
+        bestDesplay
     } = req.body;
+
+    const creator = req.userData.userId;
 
     //category validation
     let validCategory;
