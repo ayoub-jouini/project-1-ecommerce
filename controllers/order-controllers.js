@@ -115,8 +115,37 @@ const getOrderById = async (req, res, next) => {
     res.json({ order: order.toObject({ getters: true }) });
 }
 
-const deleteOrder = (req, res, next) => {
+const deleteOrder = async (req, res, next) => {
+    const orderId = req.params.id;
 
+    let order;
+    try {
+        order = await Order.findById(orderId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find order.',
+            500
+        );
+        return next(error);
+    }
+
+    if (order.length == 0) {
+        const error = new HttpError('could not find the order',
+            404);
+        return next(error);
+    }
+
+    try {
+        await order.remove();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not delete order.',
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ message: "order deleted" });
 }
 
 const updateOrderState = async (req, res, next) => {
