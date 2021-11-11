@@ -140,9 +140,10 @@ const updateCategory = async (req, res, next) => {
 //delete category function
 const deleteCategory = async (req, res, next) => {
 
-
     const categoryId = req.params.id;
+    let category;
     try {
+        category = await Category.findById(categoryId);
         await Category.findByIdAndDelete(categoryId);
     } catch (err) {
         const error = new HttpError(
@@ -152,9 +153,22 @@ const deleteCategory = async (req, res, next) => {
         return next(error);
     }
 
-    //delete all the products with this category;
+    const categoryName = category.categoryName;
 
-    res.json({ message: 'category deleted' });
+    //delete all the products with this category;
+    let productsDeleted;
+    try {
+        productsDeleted = await Product.deleteMany({ productCategory: categoryName })
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not delete the prodcuts',
+            500
+        );
+        return next(error);
+    }
+
+
+    res.json({ message: 'category and products deleted' });
 
 }
 
