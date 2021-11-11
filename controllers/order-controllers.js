@@ -1,7 +1,6 @@
 const HttpError = require('../middleware/http-error');
 const Order = require('../models/order-model');
 const Product = require('../models/products-model');
-const User = require('../models/users-model');
 
 const postOrder = async (req, res, next) => {
     const errors = validationResult(req);

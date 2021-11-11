@@ -1,11 +1,19 @@
 const express = require('express');
+const { check } = require('express-validator');
 
 const orderControllers = require('../controllers/order-controllers');
 const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
 
-router.post('/', orderControllers.postOrder);
+router.post('/',
+    check('userName').not().isEmpty(),
+    check('useEmail').not().isEmpty(),
+    check('userEmail').isEmail(),
+    check('userPhoneNumber').not().isEmpty(),
+    check('userPhoneNumber').isNumeric(),
+    check('userAdress').not().isEmpty()
+    , orderControllers.postOrder);
 
 router.use(checkAuth);
 
