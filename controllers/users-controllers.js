@@ -269,8 +269,41 @@ const updateUser = async (req, res, next) => {
     res.status(200).json({ message: "user updated" });
 }
 
-const deleteUser = () => {
+const deleteUser = async (req, res, next) => {
+    //admin validation
+    let adminValidation;
+    try {
+        adminValidation = checkUserRole("admin", req.userData.userId);
+    } catch (err) {
+        const error = new HttpError(
+            'something went wrong.',
+            500
+        );
+        return next(error);
+    }
+    if (!adminValidation) {
+        const error = new HttpError(
+            'Access denied.',
+            500
+        );
+        return next(error);
+    }
 
+
+    const userId = req.params.id;
+
+    //delete the user
+    try {
+        await User.findByIdAndDelete(userId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not delete user.',
+            500
+        );
+        return next(error);
+    }
+
+    res.status(200).json({ message: "user deleted" });
 }
 
 exports.getAllUsers = getAllUsers;
