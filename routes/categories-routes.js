@@ -1,4 +1,5 @@
 const express = require('express');
+const { check } = require('express-validator');
 
 const categoriesControllers = require('../controllers/categories-controllers');
 const checkAuth = require('../middleware/check-auth');
@@ -9,9 +10,13 @@ router.get('/', categoriesControllers.getAllCategories);
 
 router.use(checkAuth);
 
-router.post('/', categoriesControllers.postCategory);
+router.post('/',
+    check('categoryName').not().isEmpty()
+    , categoriesControllers.postCategory);
 
-router.patch('/:id', categoriesControllers.updateCategory);
+router.patch('/:id',
+    check('categoryName').not().isEmpty()
+    , categoriesControllers.updateCategory);
 
 router.delete('/:id', categoriesControllers.deleteCategory);
 
