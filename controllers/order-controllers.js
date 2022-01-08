@@ -3,12 +3,6 @@ const Order = require('../models/order-model');
 const Product = require('../models/products-model');
 
 const postOrder = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(
-            new HttpError('Invalid inputs passed, please check your data.', 422)
-        );
-    }
 
     //the req body
     const {
