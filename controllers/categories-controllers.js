@@ -156,9 +156,8 @@ const deleteCategory = async (req, res, next) => {
     const categoryName = category.categoryName;
 
     //delete all the products with this category;
-    let productsDeleted;
     try {
-        productsDeleted = await Product.deleteMany({ productCategory: categoryName })
+        await Product.deleteMany({ productCategory: categoryName })
     } catch (err) {
         const error = new HttpError(
             'Something went wrong, could not delete the prodcuts',
