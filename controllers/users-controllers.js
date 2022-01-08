@@ -226,7 +226,6 @@ const updateUser = async (req, res, next) => {
     user.lastName = lastName;
     user.email = email;
     user.password = password;
-    user.userType = userType;
 
     //save change 
     try {
@@ -237,11 +236,6 @@ const updateUser = async (req, res, next) => {
             500
         );
         return next(error);
-    }
-    if (imagePath != req.file.path) {
-        fs.unlink(imagePath, err => {
-            console.log(err);
-        })
     }
 
     res.status(200).json({ message: "user updated" });
