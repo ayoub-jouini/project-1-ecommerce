@@ -27,7 +27,7 @@ const getAllUsers = async (req, res, next) => {
         return next(error);
     }
 
-    res.json({ users: users.toObject({ getters: true }) });
+    res.json({ users });
 
 }
 
@@ -194,26 +194,6 @@ const signIn = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 
-    //admin validation
-    let adminValidation;
-    try {
-        adminValidation = checkUserRole("admin", req.userData.userId);
-    } catch (err) {
-        const error = new HttpError(
-            'something went wrong.',
-            500
-        );
-        return next(error);
-    }
-    if (!adminValidation) {
-        const error = new HttpError(
-            'Access denied.',
-            500
-        );
-        return next(error);
-    }
-
-
     //data validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -226,8 +206,7 @@ const updateUser = async (req, res, next) => {
         firstName,
         lastName,
         email,
-        password,
-        userType
+        password
     } = req.body;
 
     const userId = req.params.id;
@@ -243,7 +222,6 @@ const updateUser = async (req, res, next) => {
         return next(error);
     }
 
-    const imagePath = user.image;
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;
@@ -264,6 +242,95 @@ const updateUser = async (req, res, next) => {
         fs.unlink(imagePath, err => {
             console.log(err);
         })
+    }
+
+    res.status(200).json({ message: "user updated" });
+}
+
+const updateImage = async (req, res, next) => {
+    const userId = req.params.id;
+
+    let user;
+    try {
+        user = await User.findById(userId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find the user.',
+            500
+        );
+        return next(error);
+    }
+
+    const imagePath = user.image;
+
+    //save change 
+    try {
+        await user.save();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not update user.',
+            500
+        );
+        return next(error);
+    }
+    if (imagePath != req.file.path) {
+        fs.unlink(imagePath, err => {
+            console.log(err);
+        })
+    }
+
+    res.status(200).json({ message: "user updated" });
+
+}
+
+const UpdateUserRole = async (req, res, next) => {
+    //admin validation
+    let adminValidation;
+    try {
+        adminValidation = checkUserRole("admin", req.userData.userId);
+    } catch (err) {
+        const error = new HttpError(
+            'something went wrong.',
+            500
+        );
+        return next(error);
+    }
+    if (!adminValidation) {
+        const error = new HttpError(
+            'Access denied.',
+            500
+        );
+        return next(error);
+    }
+
+    const {
+        userType
+    } = req.body;
+
+    const userId = req.params.id;
+
+    let user;
+    try {
+        user = await User.findById(userId);
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find the user.',
+            500
+        );
+        return next(error);
+    }
+
+    user.userType = userType;
+
+    //save change 
+    try {
+        await user.save();
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not update user.',
+            500
+        );
+        return next(error);
     }
 
     res.status(200).json({ message: "user updated" });
@@ -311,4 +378,6 @@ exports.getUserById = getUserById;
 exports.signIn = signIn;
 exports.createUser = createUser;
 exports.updateUser = updateUser;
+exports.UpdateUserRole = UpdateUserRole;
+exports.updateImage = updateImage;
 exports.deleteUser = deleteUser;
