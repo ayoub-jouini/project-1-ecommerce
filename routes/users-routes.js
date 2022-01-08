@@ -17,14 +17,14 @@ router.use(checkAuth);
 
 router.get('/', usersControllers.getAllUsers);
 
-router.post('/singup',
+router.post('/create',
     check('firstName').not().isEmpty(),
     check('lastName').not().isEmpty(),
     check('email').not().isEmpty(),
     check('email').normalizeEmail().isEmail(),
     check('password').not().isEmpty(),
     check('userType').not().isEmpty(),
-    usersControllers.signUp);
+    usersControllers.createUser);
 
 router.get('/:id', usersControllers.getUserById);
 

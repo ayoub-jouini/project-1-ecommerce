@@ -57,11 +57,11 @@ const getUserById = async (req, res, next) => {
 }
 
 
-//signUp function
-const signUp = async (req, res, next) => {
+//createUser function
+const createUser = async (req, res, next) => {
 
     const errors = validationResult(req);
-    if (errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return next(
             new HttpError(
                 'invalid inputs passed, please check your data',
@@ -120,7 +120,7 @@ const signUp = async (req, res, next) => {
         return next(error);
     }
 
-    res.status(201).json({ userId: createdUser.id, email: createdUser.email });
+    res.status(201).json({ message: "user created!" });
 }
 
 
@@ -128,7 +128,7 @@ const signUp = async (req, res, next) => {
 //signin function
 const signIn = async (req, res, next) => {
     const errors = validationResult(req);
-    if (errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return next(
             new HttpError(
                 'invalid inputs passed, please check your data',
@@ -309,6 +309,6 @@ const deleteUser = async (req, res, next) => {
 exports.getAllUsers = getAllUsers;
 exports.getUserById = getUserById;
 exports.signIn = signIn;
-exports.signUp = signUp;
+exports.createUser = createUser;
 exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;
