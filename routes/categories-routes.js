@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get('/', categoriesControllers.getAllCategories);
 
+router.get('/:id', categoriesControllers.getCategoryById);
+
 router.use(checkAuth);
 
 router.post('/',
