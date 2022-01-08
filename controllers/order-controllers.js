@@ -17,10 +17,10 @@ const postOrder = async (req, res, next) => {
         userPhoneNumber,
         userAdress,
         productsIds,
-        price
     } = req.body;
 
     //products validation 
+    let price = 0;
     for (let i = 0; i < productsIds.length; i++) {
         let ValidProduct;
         try {
@@ -40,6 +40,8 @@ const postOrder = async (req, res, next) => {
             );
             return next(error);
         }
+
+        price = price + ValidProduct.price;
     }
 
     const createdOrder = new Order({
