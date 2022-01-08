@@ -19,16 +19,15 @@ router.use(checkAuth);
 
 router.post('/',
     fileUpload.single('image'),
-    check('productName').not().isEmpty(),
+    [check('productName').not().isEmpty(),
     check('productCategory').not().isEmpty(),
-    check('price').not().isEmpty(),
-    check('creator').not().isEmpty(),
+    check('price').not().isEmpty()],
     productsControllers.postProduct);
 
 router.patch('/:category/:id',
-    fileUpload.single('image'),
+    fileUpload.single('image'), [
     check('productName').not().isEmpty(),
-    check('price').not().isEmpty(),
+    check('price').not().isEmpty()],
     productsControllers.updateProduct);
 
 router.delete('/:category/:id', productsControllers.deleteProduct);

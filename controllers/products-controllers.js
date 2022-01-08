@@ -79,7 +79,7 @@ const getProductsByCategory = async (req, res, next) => {
         return next(error);
     }
 
-    if (categories.length === 0 || categories.products.length === 0) {
+    if (!categories || !categories.products) {
         const error = new HttpError(
             'there is no products with this category',
             404
@@ -107,7 +107,7 @@ const getProductById = async (req, res, next) => {
         return next(error);
     }
 
-    if (product.length === 0) {
+    if (!product) {
         const error = new HttpError(
             'there is no product whith this id.',
             500
@@ -115,7 +115,7 @@ const getProductById = async (req, res, next) => {
         return next(error);
     }
 
-    res.json({ product: product.toObject({ getters: true }) });
+    res.json({ product });
 }
 
 
@@ -153,7 +153,7 @@ const postProduct = async (req, res, next) => {
         return next(error);
     }
 
-    if (validCategory.length === 0) {
+    if (!validCategory) {
         const error = new HttpError(
             'category not found.',
             404
