@@ -80,7 +80,7 @@ const postCategory = async (req, res, next) => {
         return next(error);
     }
 
-    if (!(validCategory.length === 0)) {
+    if (!!validCategory) {
         const error = new HttpError(
             'category already exist.',
             404
@@ -111,7 +111,7 @@ const postCategory = async (req, res, next) => {
 const updateCategory = async (req, res, next) => {
 
     const errors = validationResult(req);
-    if (errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return next(
             new HttpError(
                 'invalid inputs passed, please check your data',
