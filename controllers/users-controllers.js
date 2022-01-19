@@ -66,7 +66,7 @@ const createUser = async (req, res, next) => {
         adminValidation = checkUserRole("admin", req.userData.userId);
     } catch (err) {
         const error = new HttpError(
-            'something went wrong.',
+            'something went wrong, you are not an admin, shame on you.',
             500
         );
         return next(error);
