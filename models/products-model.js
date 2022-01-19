@@ -9,7 +9,7 @@ const productSchema = new Schema({
     description: { type: String, require: true },
     price: { type: Number, require: true },
     onStock: { type: Boolean, require: true, default: true },
-    size: { type: Array, require: true },
+    size: { type: Array, require: true, default: ["s", "m", "l"] },
     bestDesplay: { type: Boolean, require: true },
     creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
 });
