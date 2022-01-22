@@ -64,6 +64,33 @@ const getBestProducts = async (req, res, next) => {
     });
 }
 
+const getNewProducts = async (req, res, next) => {
+    const { date } = req.body;
+    let newProducts;
+    try {
+        newProducts = await Product.find({ creationDate: { $gte: date } });
+    } catch (err) {
+        const error = new HttpError(
+            'Something went wrong, could not find the new products.',
+            500
+        );
+        return next(error);
+    }
+
+    if (newProducts.length === 0) {
+        const error = new HttpError(
+            'there is no new products',
+            404
+        );
+        return next(error);
+    }
+
+    res.json({
+        newProducts: newProducts.map(prod =>
+            prod.toObject({ getters: true }))
+    });
+}
+
 
 //get products by category function
 const getProductsByCategory = async (req, res, next) => {
@@ -313,3 +340,4 @@ exports.getProductById = getProductById;
 exports.postProduct = postProduct;
 exports.updateProduct = updateProduct;
 exports.deleteProduct = deleteProduct;
+exports.getNewProducts = getNewProducts;

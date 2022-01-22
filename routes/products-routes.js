@@ -15,6 +15,8 @@ router.get('/:category', productsControllers.getProductsByCategory);
 
 router.get('/:category/:id', productsControllers.getProductById);
 
+router.get("/newproducts", productsControllers.getNewProducts);
+
 router.use(checkAuth);
 
 router.post('/',
