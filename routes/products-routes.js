@@ -11,11 +11,11 @@ router.get('/', productsControllers.getAllProducts);
 
 router.get('/bestProducts', productsControllers.getBestProducts);
 
+router.get("/newproducts", productsControllers.getNewProducts);
+
 router.get('/:category', productsControllers.getProductsByCategory);
 
 router.get('/:category/:id', productsControllers.getProductById);
-
-router.get("/newproducts", productsControllers.getNewProducts);
 
 router.use(checkAuth);
 

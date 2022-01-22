@@ -6,6 +6,7 @@ const HttpError = require('../middleware/http-error');
 const Product = require('../models/products-model');
 const Category = require('../models/category-model');
 const User = require('../models/users-model');
+const formatDate = require('../middleware/formatDate');
 
 
 //get all the products function
@@ -65,10 +66,13 @@ const getBestProducts = async (req, res, next) => {
 }
 
 const getNewProducts = async (req, res, next) => {
-    const { date } = req.body;
+
+    const date = new Date();
+    date.setMonth(date.getMonth() - 3);
+
     let newProducts;
     try {
-        newProducts = await Product.find({ creationDate: { $gte: date } });
+        newProducts = await Product.find({ creationDate: { $gte: formatDate(date) } });
     } catch (err) {
         const error = new HttpError(
             'Something went wrong, could not find the new products.',
