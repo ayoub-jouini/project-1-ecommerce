@@ -11,7 +11,8 @@ const productSchema = new Schema({
     onStock: { type: Boolean, require: true, default: true },
     size: { type: Array, require: true, default: ["s", "m", "l"] },
     bestDesplay: { type: Boolean, require: true },
-    creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
+    creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
+    creationDate: { type: Date, required: true, default: Date.now }
 });
 
 module.exports = mongoose.model('Product', productSchema);
